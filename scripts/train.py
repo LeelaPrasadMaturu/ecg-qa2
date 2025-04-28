@@ -41,11 +41,13 @@ def main():
     # Initialize model with proper architecture
     model = ClinicalVQAModel().to(device)
     
-    optimizer = torch.optim.AdamW(
-        model.parameters(),
-        lr=config.lr,
-        weight_decay=1e-5
-    )
+    # Replace current optimizer with:
+    optimizer = torch.optim.AdamW([
+        {'params': model.image_encoder.parameters(), 'lr': 1e-5},
+        {'params': model.text_encoder.parameters(), 'lr': 2e-5},
+        {'params': model.cross_attn.parameters(), 'lr': 3e-5},
+        {'params': model.classifier.parameters(), 'lr': 1e-4}
+    ], weight_decay=1e-5)
     
     trainer = MedicalTrainer(model, train_loader, None, optimizer, device)
     
