@@ -11,6 +11,16 @@ from src.configs.clinical_config import ClinicalConfig
 def main():
     config = ClinicalConfig()
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+   # Reduce batch size for Colab
+    config.batch_size = 4  
+
+     # Use lighter EfficientNet version
+    config.image_encoder = 'efficientnet-b0'
+    
+    # Enable mixed precision
+    config.use_amp = True
+    
     
     # Initialize components
     train_dataset = ClinicalECGDataset(
@@ -23,8 +33,9 @@ def main():
         train_dataset,
         batch_size=config.batch_size,
         shuffle=True,
-        num_workers=4,
-        pin_memory=True
+        num_workers=2,
+        pin_memory=True,
+        persistent_workers=True
     )
     
     # Initialize model with proper architecture
@@ -43,6 +54,10 @@ def main():
         print(f"Epoch {epoch} Loss: {loss:.4f}")
     
     torch.save(model.state_dict(), config.model_save_path)
+
+     # Add memory optimization
+    torch.backends.cudnn.benchmark = True
+    torch.cuda.empty_cache()
 
 if __name__ == "__main__":
     main()
