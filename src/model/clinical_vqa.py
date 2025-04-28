@@ -9,8 +9,8 @@ from .clinical_heads import ClinicalClassifier
 class ClinicalVQAModel(nn.Module):
     def __init__(self):
         super().__init__()
-        self.image_encoder = MedicalImageEncoder()
-        self.text_encoder = ClinicalTextEncoder()
+        self.image_encoder = torch.utils.checkpoint.checkpoint(MedicalImageEncoder())
+        self.text_encoder = torch.utils.checkpoint.checkpoint(ClinicalTextEncoder())
         self.cross_attn = MedicalCrossAttention()
         self.diagnostic_gate = DiagnosticGate(input_dim=512)
         self.classifier = ClinicalClassifier()
