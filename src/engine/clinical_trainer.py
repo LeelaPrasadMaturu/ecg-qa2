@@ -1,6 +1,7 @@
 # ecg_vqa_system/src/engine/clinical_trainer.py
 import torch
 from tqdm import tqdm
+from torch.cuda.amp import autocast, GradScaler
 
 class MedicalTrainer:
     def __init__(self, model, train_loader, val_loader, optimizer, device):
@@ -9,6 +10,7 @@ class MedicalTrainer:
         self.val_loader = val_loader
         self.optimizer = optimizer
         self.device = device
+        self.scaler = GradScaler()
         
     def train_epoch(self, epoch):
         self.model.train()
@@ -16,6 +18,10 @@ class MedicalTrainer:
         
         for batch in tqdm(self.train_loader, desc=f"Epoch {epoch}"):
             self.optimizer.zero_grad()
+
+            with autocast():  # Enable AMP
+              outputs = self.model(images, texts)
+              loss = F.cross_entropy(outputs, answers)
             
             images = batch['image'].to(self.device)
             texts = batch['input_ids'].to(self.device)
