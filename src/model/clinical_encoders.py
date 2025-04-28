@@ -8,13 +8,16 @@ class MedicalImageEncoder(nn.Module):
     def __init__(self):
         super().__init__()
         self.base = EfficientNet.from_pretrained('efficientnet-b4', in_channels=1)
-        self.lead_attention = nn.MultiheadAttention(embed_dim=1792, num_heads=8)
+        self.adaptive_pool = nn.AdaptiveAvgPool2d((1, 1))
+        # self.lead_attention = nn.MultiheadAttention(embed_dim=1792, num_heads=8)
         
     def forward(self, x):
         x = self.base.extract_features(x)
-        x = x.flatten(2).permute(2, 0, 1)
-        attn_out, _ = self.lead_attention(x, x, x)
-        return attn_out.mean(dim=0)
+        x = self.adaptive_pool(x)  # Reduce spatial dimensions
+        return x.flatten(1)
+        # x = x.flatten(2).permute(2, 0, 1)
+        # attn_out, _ = self.lead_attention(x, x, x)
+        # return attn_out.mean(dim=0)
 
 # In src/model/clinical_encoders.py
 class ClinicalTextEncoder(nn.Module):
