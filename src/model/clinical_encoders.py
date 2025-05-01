@@ -5,9 +5,9 @@ from efficientnet_pytorch import EfficientNet
 from transformers import AutoModel
 
 class MedicalImageEncoder(nn.Module):
-    def __init__(self):
+    def __init__(self, encoder_name='efficientnet-b4'):
         super().__init__()
-        self.base = EfficientNet.from_pretrained('efficientnet-b4', in_channels=1)
+        self.base = EfficientNet.from_pretrained(encoder_name, in_channels=1)
         self.adaptive_pool = nn.AdaptiveAvgPool2d((1, 1))
         # self.lead_attention = nn.MultiheadAttention(embed_dim=1792, num_heads=8)
         

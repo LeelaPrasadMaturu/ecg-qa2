@@ -19,16 +19,23 @@ class MedicalTrainer:
         for batch in tqdm(self.train_loader, desc=f"Epoch {epoch}"):
             self.optimizer.zero_grad()
 
-            with autocast():  # Enable AMP
-              outputs = self.model(images, texts)
-              loss = F.cross_entropy(outputs, answers)
-            
             images = batch['image'].to(self.device)
             texts = batch['input_ids'].to(self.device)
+            attention_mask = batch['attention_mask'].to(self.device)
             answers = batch['answer'].to(self.device)
+
+            with autocast():
+                outputs = self.model(images, texts, attention_mask)
+                loss = torch.nn.functional.cross_entropy(outputs, answers)
+
+            self.scaler.scale(loss).backward()
+            self.scaler.step(self.optimizer)
+            self.scaler.update()
+
+
             
-            outputs = self.model(images, texts)
-            loss = torch.nn.functional.cross_entropy(outputs, answers)
+            # outputs = self.model(images, texts)
+            # loss = torch.nn.functional.cross_entropy(outputs, answers)
             
             loss.backward()
             self.optimizer.step()

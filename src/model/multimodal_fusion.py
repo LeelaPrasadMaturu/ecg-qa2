@@ -33,4 +33,6 @@ class DiagnosticGate(nn.Module):
         )
         
     def forward(self, features):
-        return features * self.gate(features)
+        gate = self.gate(features)
+        return features * gate + features   
+

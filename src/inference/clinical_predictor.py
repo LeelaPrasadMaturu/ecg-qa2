@@ -8,6 +8,8 @@ class ClinicalPredictor:
         self.tokenizer = tokenizer
         self.transforms = transforms
         self.device = device
+        self.model.eval()
+
         
     def predict(self, image_path, question):
         img = self._process_image(image_path)
@@ -20,7 +22,11 @@ class ClinicalPredictor:
         ).to(self.device)
         
         with torch.no_grad():
-            output = self.model(img.unsqueeze(0), tokens['input_ids'])
+            output = self.model(
+                img.unsqueeze(0),
+                tokens['input_ids'],
+                tokens['attention_mask']
+            )
             return 'yes' if torch.argmax(output) == 1 else 'no'
             
     def _process_image(self, path):
