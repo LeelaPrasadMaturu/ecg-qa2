@@ -28,7 +28,7 @@ class MedicalTrainer:
             answers = batch['answer'].to(self.device)
             
             outputs = self.model(images, texts)
-            loss = torch.nn.functional.nll_loss(outputs, answers)
+            loss = torch.nn.functional.cross_entropy(outputs, answers)
             
             loss.backward()
             self.optimizer.step()

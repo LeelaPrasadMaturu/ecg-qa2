@@ -15,18 +15,10 @@ class ClinicalVQAModel(nn.Module):
         self.diagnostic_gate = DiagnosticGate(input_dim=512)
         self.classifier = ClinicalClassifier()
 
-    def forward(self, images, input_ids):
-        # Image processing
+    def forward(self, images, input_ids, attention_mask):
         img_features = self.image_encoder(images)
-        
-        # Text processing
-        txt_features = self.text_encoder(input_ids)
-        
-        # Multimodal fusion
+        txt_features = self.text_encoder(input_ids, attention_mask)
         fused_features = self.cross_attn(img_features, txt_features)
-        
-        # Diagnostic gating
         gated_features = self.diagnostic_gate(fused_features)
-        
-        # Classification
         return self.classifier(gated_features)
+

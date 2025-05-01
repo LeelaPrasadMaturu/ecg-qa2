@@ -7,6 +7,8 @@ import torch
 from torch.utils.data import Dataset
 from transformers import AutoTokenizer
 import numpy as np
+from src.data.clinical_transforms import ClinicalTransforms
+
 
 class ClinicalECGDataset(Dataset):
     def __init__(self, json_path, image_dir, tokenizer_name, max_length=128):
@@ -14,6 +16,8 @@ class ClinicalECGDataset(Dataset):
         self.image_dir = image_dir
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
         self.max_length = max_length
+        self.transforms = ClinicalTransforms(img_size=512).train
+
 
     def _load_medical_json(self, path):
         with open(path) as f:
@@ -31,7 +35,8 @@ class ClinicalECGDataset(Dataset):
         if not path.endswith('.png'):
             path += '.png'
         image = Image.open(os.path.join(self.image_dir, path)).convert('L')
-        return self._medical_transform(image)
+        return self.transforms(image)
+
 
 
     def _medical_transform(self, img):

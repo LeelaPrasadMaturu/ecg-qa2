@@ -13,14 +13,12 @@ class MedicalCrossAttention(nn.Module):
         self.attention = nn.MultiheadAttention(512, 8)
         
     def forward(self, img_feats, txt_feats):
-        projected_img = self.img_proj(img_feats)
-        projected_txt = self.txt_proj(txt_feats)
-        attn_output, _ = self.attention(
-            projected_img.unsqueeze(1),
-            projected_txt.unsqueeze(1),
-            projected_txt.unsqueeze(1)
-        )
-        return attn_output.squeeze()
+        query = self.img_proj(img_feats).unsqueeze(0)  # [1, B, 512]
+        key = self.txt_proj(txt_feats).unsqueeze(0)    # [1, B, 512]
+        value = key
+        attn_output, _ = self.attention(query, key, value)
+        return attn_output.squeeze(0)
+
 
 
 # In src/model/multimodal_fusion.py

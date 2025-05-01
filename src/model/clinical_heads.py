@@ -6,9 +6,8 @@ class ClinicalClassifier(nn.Module):
         super().__init__()
         self.head = nn.Sequential(
             nn.LayerNorm(512),
-            nn.Linear(512, 2),
-            nn.LogSoftmax(dim=-1)
+            nn.Linear(512, 2)
         )
-        
+
     def forward(self, x):
-        return self.head(x) 
+        return self.head(x)
