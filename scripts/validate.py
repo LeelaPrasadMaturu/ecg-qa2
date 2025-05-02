@@ -26,7 +26,7 @@ def main():
         pin_memory=True
     )
 
-    model = ClinicalVQAModel().to(device)
+    model = ClinicalVQAModel(image_encoder=config.image_encoder).to(device)
     model.load_state_dict(torch.load(config.model_save_path, map_location=device))
 
     evaluator = ClinicalEvaluator(model, val_loader, device)

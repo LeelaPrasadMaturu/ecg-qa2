@@ -3,7 +3,7 @@ from transformers import AutoTokenizer
 
 class ClinicalConfig:
     def __init__(self):
-        self.dataset_mean = 0.456  # From your data
+        self.dataset_mean = 0.456  
         self.dataset_std = 0.224
         self.warmup_steps = 1000
         self.img_size = 512

@@ -30,7 +30,7 @@ class ClinicalECGDataset(Dataset):
             'answer': 1 if item['answer'][0].lower() == 'yes' else 0
         }
 
-    @lru_cache(maxsize=1000)
+    @lru_cache(maxsize=512)
     def _load_ecg_image(self, path):
         if not path.endswith('.png'):
             path += '.png'
