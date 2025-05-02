@@ -56,7 +56,7 @@ def calculate_medical_stats(image_dir, batch_size=32, num_workers=4):
     return mean.item(), std.item()
 
 if __name__ == "__main__":
-    image_dir = "ecg_vqa_system/clinical_dataset/ecgImages"  
+    image_dir = "clinical_data/ecgImages"  
     mean, std = calculate_medical_stats(image_dir)
     
     print("\nClinical Dataset Statistics:")
