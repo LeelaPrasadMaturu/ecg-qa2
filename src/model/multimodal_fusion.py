@@ -20,8 +20,6 @@ class MedicalCrossAttention(nn.Module):
         return attn_output.squeeze(0)
 
 
-
-# In src/model/multimodal_fusion.py
 class DiagnosticGate(nn.Module):
     def __init__(self, input_dim=512):  # Changed from 1024 to match actual features
         super().__init__()
@@ -34,5 +32,5 @@ class DiagnosticGate(nn.Module):
         
     def forward(self, features):
         gate = self.gate(features)
-        return features * gate + features   
+        return (features * gate) + (features * (1 - gate))   
 

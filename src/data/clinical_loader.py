@@ -39,11 +39,11 @@ class ClinicalECGDataset(Dataset):
 
 
 
-    def _medical_transform(self, img):
-        img_array = np.array(img)  # convert PIL image to numpy array
-        return torch.stack([
-            torch.tensor(img_array).float().div(255).sub(0.5).div(0.5)
-        ])
+    # def _medical_transform(self, img):
+    #     img_array = np.array(img)  # convert PIL image to numpy array
+    #     return torch.stack([
+    #         torch.tensor(img_array).float().div(255).sub(0.5).div(0.5)
+    #     ])
 
     def __len__(self):
         return len(self.data)

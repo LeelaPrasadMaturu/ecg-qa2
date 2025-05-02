@@ -4,16 +4,14 @@ import torch.nn as nn
 from .clinical_encoders import MedicalImageEncoder, ClinicalTextEncoder
 from .multimodal_fusion import MedicalCrossAttention, DiagnosticGate
 from .clinical_heads import ClinicalClassifier
-def __init__(self, image_encoder='efficientnet-b4'):
-    super().__init__()
     
 
 
 class ClinicalVQAModel(nn.Module):
-    def __init__(self):
+    def __init__(self, image_encoder='efficientnet-b0'): 
         super().__init__()
-        self.image_encoder = MedicalImageEncoder(image_encoder)
-        self.text_encoder = torch.utils.checkpoint.checkpoint(ClinicalTextEncoder())
+        self.image_encoder = MedicalImageEncoder(encoder_name=image_encoder)
+        self.text_encoder = ClinicalTextEncoder()
         self.cross_attn = MedicalCrossAttention()
         self.diagnostic_gate = DiagnosticGate(input_dim=512)
         self.classifier = ClinicalClassifier()
