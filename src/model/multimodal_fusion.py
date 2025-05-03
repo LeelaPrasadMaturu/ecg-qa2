@@ -9,7 +9,7 @@ class MedicalCrossAttention(nn.Module):
         super().__init__()
         self.img_proj = nn.Linear(img_dim, 256)
         self.txt_proj = nn.Linear(txt_dim, 256)
-        self.attention = nn.MultiheadAttention(512, 8, batch_first=True)  # Critical fix
+        self.attention = nn.MultiheadAttention(512, 8, batch_first=True)  
         
     def forward(self, img_feats, txt_feats):
         query = self.img_proj(img_feats).unsqueeze(1)  
