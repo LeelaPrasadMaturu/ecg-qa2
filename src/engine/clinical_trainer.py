@@ -10,7 +10,7 @@ class MedicalTrainer:
         self.val_loader = val_loader
         self.optimizer = optimizer
         self.device = device
-        self.scaler = GradScaler()
+        self.scaler = torch.amp.GradScaler(device_type='cuda', enabled=config.use_amp)
         
     def train_epoch(self, epoch):
         self.model.train()
@@ -24,12 +24,12 @@ class MedicalTrainer:
             attention_mask = batch['attention_mask'].to(self.device)
             answers = batch['answer'].to(self.device)
 
-            with autocast():
+            with torch.amp.autocast(device_type='cuda', dtype=torch.float16):
                 outputs = self.model(images, input_ids, attention_mask)
                 loss = torch.nn.functional.cross_entropy(outputs, answers)
 
             self.scaler.scale(loss).backward()
-            self.scaler.unscale_(self.optimizer)
+            self.scaler.unscale_(self.optimizer)    
             torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
             self.scaler.step(self.optimizer)
             self.scaler.update()

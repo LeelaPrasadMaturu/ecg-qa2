@@ -5,15 +5,15 @@ import torch.nn.functional as F
 
 
 class MedicalCrossAttention(nn.Module):
-    def __init__(self, img_dim=1280, txt_dim=512):
+    def __init__(self, img_dim=1280, txt_dim=768):
         super().__init__()
-        self.img_proj = nn.Linear(img_dim, 512)
-        self.txt_proj = nn.Linear(txt_dim, 512)
+        self.img_proj = nn.Linear(img_dim, 256)
+        self.txt_proj = nn.Linear(txt_dim, 256)
         self.attention = nn.MultiheadAttention(512, 8, batch_first=True)  # Critical fix
         
     def forward(self, img_feats, txt_feats):
-        query = self.img_proj(img_feats).unsqueeze(1)  # [B, 1, D]
-        key = self.txt_proj(txt_feats).unsqueeze(1)    # [B, 1, D]
+        query = self.img_proj(img_feats).unsqueeze(1)  
+        key = self.txt_proj(txt_feats).unsqueeze(1)    
         attn_output, _ = self.attention(query, key, key)
         return attn_output.squeeze(1)
 
