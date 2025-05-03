@@ -60,6 +60,8 @@ class ClinicalECGDataset(Dataset):
        )
        return {
        	 'image': self._load_ecg_image(item['ecg_path']),
+         if torch.isnan(image).any():
+            raise ValueError(f"NaN detected in ECG image: {item['ecg_path']}")
          'input_ids': encoding['input_ids'].squeeze(),
          'attention_mask': encoding['attention_mask'].squeeze(),
          'answer': torch.tensor(item['answer'], dtype=torch.long)

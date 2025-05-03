@@ -7,7 +7,7 @@ import torch.nn.functional as F
 class MedicalCrossAttention(nn.Module):
     def __init__(self, img_dim=1280, txt_dim=768):
         super().__init__()
-        self.img_proj = nn.Linear(img_dim, 256)
+        self.img_proj = nn.Linear(img_dim, 256) 
         self.txt_proj = nn.Linear(txt_dim, 256)
         self.attention = nn.MultiheadAttention(512, 8, batch_first=True)  
         
