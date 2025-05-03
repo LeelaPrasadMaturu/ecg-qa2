@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 
 class MedicalCrossAttention(nn.Module):
-    def __init__(self, img_dim=1792, txt_dim=512):
+    def __init__(self, img_dim=1280, txt_dim=512):
         super().__init__()
         self.img_proj = nn.Linear(img_dim, 512)  
         self.txt_proj = nn.Linear(txt_dim, 512) 
@@ -20,8 +20,9 @@ class MedicalCrossAttention(nn.Module):
 
 
 class DiagnosticGate(nn.Module):
-    def __init__(self, input_dim=512):  
+    def __init__(self, input_dim=512, output_dim=512):  
         super().__init__()
+        
         self.gate = nn.Sequential(
             nn.Linear(input_dim, 256),  
             nn.ReLU(),
@@ -29,7 +30,14 @@ class DiagnosticGate(nn.Module):
             nn.Sigmoid()
         )
         
+        self.feature_transform = nn.Sequential(
+            nn.Linear(input_dim, output_dim),
+            nn.ReLU(),
+        )
+
     def forward(self, features):
         gate = self.gate(features)
-        return features + (gate * self.feature_transform(features))  
+        transformed_features = self.feature_transform(features)
+        return features + (gate * transformed_features)
+
 

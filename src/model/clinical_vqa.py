@@ -8,7 +8,7 @@ from .clinical_heads import ClinicalClassifier
 
 
 class ClinicalVQAModel(nn.Module):
-    def __init__(self, image_encoder='efficientnet-b0'): 
+    def __init__(self, image_encoder='efficientnet-b4'): 
         super().__init__()
         self.image_encoder = MedicalImageEncoder(encoder_name=image_encoder)
         self.text_encoder = ClinicalTextEncoder()

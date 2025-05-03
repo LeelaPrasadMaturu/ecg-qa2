@@ -11,4 +11,4 @@ class ClinicalConfig:
         self.lr = 3e-5
         self.epochs = 20
         self.model_save_path = "clinical_models/saved_models/best_model.pt"
-        self.tokenizer = AutoTokenizer.from_pretrained("monologg/biobert_v1.1_pubmed")
+        self.tokenizer = "monologg/biobert_v1.1_pubmed"

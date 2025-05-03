@@ -5,7 +5,7 @@ from efficientnet_pytorch import EfficientNet
 from transformers import AutoModel
 
 class MedicalImageEncoder(nn.Module):
-    def __init__(self, encoder_name='efficientnet-b0'):
+    def __init__(self, encoder_name='efficientnet-b4'):
         super().__init__()
         self.base = EfficientNet.from_pretrained(encoder_name, in_channels=1) 
         self.base._conv_stem = nn.Conv2d(1, 32, kernel_size=3, stride=2, bias=False)
