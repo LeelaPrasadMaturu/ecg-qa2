@@ -7,8 +7,12 @@ class ClinicalTransforms:
         config = ClinicalConfig()
         
         self.train = T.Compose([
-            T.RandomAffine(degrees=0, translate=(0.05,0)),
-            T.RandomApply([T.GaussianBlur(3)], p=0.3),
+            T.RandomApply([T.ColorJitter(brightness=0.2, contrast=0.2)], p=0.3),
+            T.RandomApply([T.GaussianBlur(3)], p=0.2),
+            T.RandomChoice([
+                T.RandomAffine(degrees=0, translate=(0.03,0)), 
+                T.RandomAffine(degrees=0, scale=(0.97, 1.03))
+            ]),
             T.RandomAutocontrast(),
             T.Lambda(lambda x: x.convert('L')),
             T.Resize((img_size, img_size)),

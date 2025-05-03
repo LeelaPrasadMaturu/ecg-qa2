@@ -3,8 +3,9 @@ import torch
 from PIL import Image
 
 class ClinicalPredictor:
-    def __init__(self, model_path, tokenizer, transforms, device='cuda'):
-        model = ClinicalVQAModel()
+    def __init__(self, config,model_path, tokenizer, transforms, device='cuda'):
+        self.config = config
+        self.model = ClinicalVQAModel(image_encoder=config.image_encoder)
         model.load_state_dict(torch.load(model_path))
         self.tokenizer = tokenizer
         self.transforms = transforms

@@ -6,6 +6,7 @@ from src.model.clinical_vqa import ClinicalVQAModel
 from src.engine.clinical_trainer import MedicalTrainer
 from src.engine.clinical_evaluator import ClinicalEvaluator
 from src.configs.clinical_config import ClinicalConfig
+from torch.optim.lr_scheduler import OneCycleLR
 
 
 def main():
@@ -26,12 +27,15 @@ def main():
 
     model = ClinicalVQAModel(image_encoder=config.image_encoder).to(device)
 
-    optimizer = torch.optim.AdamW([
-        {'params': model.image_encoder.parameters(), 'lr': 1e-5},
-        {'params': model.text_encoder.parameters(), 'lr': 2e-5},
-        {'params': model.cross_attn.parameters(), 'lr': 3e-5},
-        {'params': model.classifier.parameters(), 'lr': 1e-4}
-    ], weight_decay=1e-5)
+    # optimizer = torch.optim.AdamW([
+    #     {'params': model.image_encoder.parameters(), 'lr': 1e-5},
+    #     {'params': model.text_encoder.parameters(), 'lr': 2e-5},
+    #     {'params': model.cross_attn.parameters(), 'lr': 3e-5},
+    #     {'params': model.classifier.parameters(), 'lr': 1e-4}
+    # ], weight_decay=1e-5)
+
+    optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
+    scheduler = OneCycleLR(optimizer, max_lr=3e-4,steps_per_epoch=len(train_loader),epochs=config.epochs)
 
     trainer = MedicalTrainer(model, train_loader, val_loader, optimizer, device)
     evaluator = ClinicalEvaluator(model, val_loader, device)
