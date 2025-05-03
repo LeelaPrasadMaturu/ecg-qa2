@@ -14,7 +14,7 @@ def main():
 
     # Adjust for Colab or low-resource setup
     config.batch_size = 4
-    config.image_encoder = 'efficientnet-b4'
+    config.image_encoder = 'efficientnet-b0'
     config.use_amp = True
 
     # Load training and validation datasets
