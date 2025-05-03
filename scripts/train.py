@@ -47,7 +47,9 @@ def main():
         print(f"Epoch {epoch} - Training Loss: {loss:.4f}")
 
         metrics = evaluator.evaluate()
-        print(f"Validation Accuracy: {metrics['accuracy']:.4f} | F1 Score: {metrics['f1']:.4f}")
+        train_loss, train_acc = trainer.train_epoch(epoch)
+        print(f"Epoch {epoch} - Training Loss: {train_loss:.4f} | Training Accuracy: {train_acc:.4f}")
+        # print(f"Validation Accuracy: {metrics['accuracy']:.4f} | F1 Score: {metrics['f1']:.4f}")
 
         if metrics['f1'] > best_f1:
             best_f1 = metrics['f1']
