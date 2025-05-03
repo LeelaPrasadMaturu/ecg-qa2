@@ -37,7 +37,7 @@ def main():
     optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
     scheduler = OneCycleLR(optimizer, max_lr=3e-4,steps_per_epoch=len(train_loader),epochs=config.epochs)
 
-    trainer = MedicalTrainer(model, train_loader, val_loader, optimizer, device)
+    trainer = MedicalTrainer(config, model, train_loader, val_loader, optimizer, device)
     evaluator = ClinicalEvaluator(model, val_loader, device)
 
     best_f1 = 0

@@ -4,7 +4,8 @@ from tqdm import tqdm
 from torch.cuda.amp import autocast, GradScaler
 
 class MedicalTrainer:
-    def __init__(self, model, train_loader, val_loader, optimizer, device):
+    def __init__(self, config ,model, train_loader, val_loader, optimizer, device):
+        self.config = config
         self.model = model.to(device)
         self.train_loader = train_loader
         self.val_loader = val_loader
